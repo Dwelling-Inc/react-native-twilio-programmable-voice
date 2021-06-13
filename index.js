@@ -22,6 +22,7 @@ const _eventHandlers = {
     callStateRinging: new Map(),
     callInviteCancelled: new Map(),
     callRejected: new Map(),
+    audioDevicesUpdated: new Map(),
 }
 
 const Twilio = {
@@ -70,7 +71,6 @@ const Twilio = {
         TwilioVoice.ignore()
     },
     setMuted: TwilioVoice.setMuted,
-    setSpeakerPhone: TwilioVoice.setSpeakerPhone,
     sendDigits: TwilioVoice.sendDigits,
     hold: TwilioVoice.setOnHold,
     requestPermissions(senderId) {
@@ -90,6 +90,24 @@ const Twilio = {
             TwilioVoice.unregister()
         }
     },
+    getAudioDevices() {
+        if (Platform.OS === IOS) {
+            return
+        }
+        TwilioVoice.getAudioDevices()
+    },
+    getSelectedAudioDevice() {
+        if (Platform.OS === IOS) {
+            return
+        }
+        TwilioVoice.getSelectedAudioDevice()
+    },
+    selectAudioDevice(name: string) {
+        if (Platform.OS === IOS) {
+            return
+        }
+        TwilioVoice.selectAudioDevice(name)
+    },
     addEventListener(type, handler) {
         if (!_eventHandlers.hasOwnProperty(type)) {
             throw new Error('Event handler not found: ' + type)
@@ -106,7 +124,7 @@ const Twilio = {
         }
         _eventHandlers[type].get(handler).remove()
         _eventHandlers[type].delete(handler)
-    }
+    },
 }
 
 export default Twilio
